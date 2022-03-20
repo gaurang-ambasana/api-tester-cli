@@ -25,7 +25,7 @@ const getObjectFromKeyValuePair = (container) =>
     {}
   );
 
-const makeRequest = (event) => {
+const makeRequest = async (event) => {
   event.preventDefault();
 
   const url = document.querySelector("[data-url]").value;
@@ -33,7 +33,8 @@ const makeRequest = (event) => {
   const params = getObjectFromKeyValuePair(queryParamsContainer);
   const headers = getObjectFromKeyValuePair(requestHeadersContainer);
 
-  axios({ url, method, params, headers }).then((res) => console.log(res));
+  const { data } = await axios({ url, method, params, headers });
+  console.log(data);
 };
 
 form.addEventListener("submit", makeRequest);
