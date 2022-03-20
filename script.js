@@ -1,11 +1,42 @@
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
+const form = document.querySelector("[data-form]");
 const keyValueTemplate = document.querySelector("[data-key-value-template]");
 const queryParamsContainer = document.querySelector("[data-query-params]");
 const requestHeadersContainer = document.querySelector(
   "[data-request-headers]"
 );
+
+const getObjectFromKeyValuePair = (container) =>
+  [...container.querySelectorAll("[data-key-value-pair]")].reduce(
+    (data, pair) => {
+      const key = pair.querySelector("[data-key]").value;
+      const value = pair.querySelector("[data-value]").value;
+
+      if (key === "") return data;
+
+      return {
+        ...data,
+        [key]: value,
+      };
+    },
+    {}
+  );
+
+const makeRequest = (event) => {
+  event.preventDefault();
+
+  const url = document.querySelector("[data-url]").value;
+  const method = document.querySelector("[data-method]").value;
+  const params = getObjectFromKeyValuePair(queryParamsContainer);
+  const headers = getObjectFromKeyValuePair(requestHeadersContainer);
+
+  axios({ url, method, params, headers }).then((res) => console.log(res));
+};
+
+form.addEventListener("submit", makeRequest);
 
 const createKeyValuePair = () => {
   const elem = keyValueTemplate.content.cloneNode(true);
